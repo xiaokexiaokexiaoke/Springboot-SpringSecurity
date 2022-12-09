@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.PermissionDao">
+    <select id="getPermissionByRid" resultType="com.example.entity.Permission">
+        select distinct
+        p.permission_code as permissionCode,
+        p.permission_name as permissionName,
+        p.id as permissionId,
+        p.menu_code as menuCode,
+        p.menu_name as menuName,
+        p.request_path as requestPath
+        from role_permission rp join permission p on p.id = rp.permission_id
+        where role_id in
+        <foreach collection="items" index="index" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </select>
+    <select id="getPermissionByUri" resultType="com.example.entity.Permission">
+        select  permission_code as permissionCode,
+                permission_name as permissionName,
+                id as permissionId,
+                menu_code as menuCode,
+                menu_name as menuName,
+                request_path as requestPath
+        from permission
+        where request_path = #{uri}
+    </select>
+</mapper>
